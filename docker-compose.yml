@@ -1,0 +1,71 @@
+services:
+  cardano-node:
+    image: inputoutput/cardano-node:1.35.7
+    command: [
+      "run",
+      "--config", "/config/config.json",
+      "--database-path", "/data/db",
+      "--socket-path", "/ipc/node.socket",
+      "--topology", "/config/topology.json"
+    ]
+    volumes:
+      - ./cardano-configurations/network/${NETWORK:-mainnet}/cardano-node:/config
+      - ./cardano-configurations/network/${NETWORK:-mainnet}/genesis:/genesis
+      - node-${NETWORK}-db:/data
+      - node-ipc:/ipc
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        compress: "true"
+        max-file: "10"
+        max-size: "50m"
+
+  ogmios:
+    image: cardanosolutions/ogmios:v5.6.0-mainnet
+    volumes: 
+      - node-ipc:/ipc
+      - ./cardano-configurations/network/mainnet:/config
+    restart: on-failure
+    ports: 
+      - 1337:1337
+    depends_on:
+      - cardano-node
+    command: [
+      "--host", "0.0.0.0",
+      "--node-socket", "/ipc/node.socket",
+      "--node-config", "/config/cardano-node/config.json"
+    ]
+
+  kupo:
+    image: cardanosolutions/kupo:v2.5.1
+    depends_on:
+      - cardano-node
+    command:
+      [
+        '--node-socket', '/ipc/node.socket',
+        '--node-config', '/configs/cardano-node/config.json',
+        '--since', '111342215.0cea9b3d1d01bec3069477581f28d6ba8f23ab6ee6724e4085c3ccb0c358c96a',
+        '--match', '*',
+        '--host', '0.0.0.0',
+        '--workdir', '/db',
+        '--prune-utxo'
+      ]
+    volumes:
+      - ./cardano-configurations/network/mainnet:/configs
+      - node-ipc:/ipc
+      - kupo-db:/db
+    ports:
+      - 1442:1442
+    restart: on-failure
+
+volumes:
+  node-mainnet-db:
+  wallet-mainnet-db:
+  node-preprod-db:
+  wallet-preprod-db:
+  node-preview-db:
+  wallet-preview-db:
+  node-ipc:
+  node-config:
+  kupo-db:
