@@ -1,30 +1,39 @@
 # Cardano Node Setup
 
-This repository contains the necessary Docker Compose configurations to set up a Cardano node along with Ogmios and Kupo, which are required for the Charli3 setup.
+This repository contains configurations for setting up a mainnet Cardano node along with Ogmios and Kupo, integral parts of the Charli3 infrastructure.
 
 ## Components
 
-- `cardano-node`: Runs the Cardano node with the official inputoutput/cardano-node image.
-- `ogmios`: A WebSocket server for Cardano, based on the cardanosolutions/ogmios image.
-- `kupo`: A webhook-based service for Cardano node events, using the cardanosolutions/kupo image.
-
-## Quickstart
-
-To launch the Cardano node, Ogmios, and Kupo for the mainnet, ensure Docker is installed on your system and run the following command:
-
-```sh
-NETWORK=mainnet docker compose up -d
-```
-
-This will start the services defined in the `docker-compose.yml` file.
+- `cardano-node`: Official inputoutput/cardano-node image for running the Cardano node.
+- `ogmios`: WebSocket server based on cardanosolutions/ogmios, for interacting with the Cardano node.
+- `kupo`: Webhook service from cardanosolutions/kupo, to handle Cardano node events.
 
 ## Prerequisites
 
+- Git
 - Docker
 - Docker Compose
 
-## Installation
+## Installation & Setup
 
-1. Clone this repository.
-2. Navigate to the repository directory.
-3. Use the provided Docker Compose command to start the services.
+1. Clone this repository with the submodule:
+    ```sh
+    git clone --recurse-submodules https://github.com/Charli3-Official/cardano-node-setup.git
+    ```
+   
+   If you've already cloned the repository, initialize and update the submodule with:
+    ```sh
+    git submodule update --init
+    ```
+
+2. Navigate to the repository directory:
+    ```sh
+    cd cardano-node-setup
+    ```
+
+3. Start the Cardano node and services with Docker:
+    ```sh
+    NETWORK=mainnet docker compose up -d
+    ```
+
+This will deploy the Cardano node, Ogmios, and Kupo services as defined in the `docker-compose.yml` file.
