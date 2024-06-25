@@ -1,6 +1,8 @@
+version: "3.5"
+
 services:
   cardano-node:
-    image: inputoutput/cardano-node:1.35.7
+    image: ghcr.io/intersectmbo/cardano-node:8.9.3
     command: [
       "run",
       "--config", "/config/config.json",
@@ -9,9 +11,9 @@ services:
       "--topology", "/config/topology.json"
     ]
     volumes:
-      - ./cardano-configurations/network/${NETWORK:-mainnet}/cardano-node:/config
-      - ./cardano-configurations/network/${NETWORK:-mainnet}/genesis:/genesis
-      - node-${NETWORK}-db:/data
+      - ./cardano-configurations/network/preprod/cardano-node:/config
+      - ./cardano-configurations/network/preprod/genesis:/genesis
+      - node-preprod-db:/data
       - node-ipc:/ipc
     restart: on-failure
     logging:
@@ -20,12 +22,12 @@ services:
         compress: "true"
         max-file: "10"
         max-size: "50m"
-
+  
   ogmios:
-    image: cardanosolutions/ogmios:v5.6.0-mainnet
+    image: cardanosolutions/ogmios:v6.4.0
     volumes: 
       - node-ipc:/ipc
-      - ./cardano-configurations/network/mainnet:/config
+      - ./cardano-configurations/network/preprod:/config
     restart: on-failure
     ports: 
       - 1337:1337
@@ -38,21 +40,21 @@ services:
     ]
 
   kupo:
-    image: cardanosolutions/kupo:v2.5.1
+    image: cardanosolutions/kupo:v2.8.0
     depends_on:
       - cardano-node
     command:
       [
         '--node-socket', '/ipc/node.socket',
         '--node-config', '/configs/cardano-node/config.json',
-        '--since', '111342215.0cea9b3d1d01bec3069477581f28d6ba8f23ab6ee6724e4085c3ccb0c358c96a',
+        '--since', '44150423.1705a8d8b69cb1315de2b7d5569953f0bb4eddb685cead76c98a6082e835f888',
         '--match', '*',
         '--host', '0.0.0.0',
         '--workdir', '/db',
         '--prune-utxo'
       ]
     volumes:
-      - ./cardano-configurations/network/mainnet:/configs
+      - ./cardano-configurations/network/preprod:/configs
       - node-ipc:/ipc
       - kupo-db:/db
     ports:
@@ -60,12 +62,8 @@ services:
     restart: on-failure
 
 volumes:
-  node-mainnet-db:
-  wallet-mainnet-db:
   node-preprod-db:
   wallet-preprod-db:
-  node-preview-db:
-  wallet-preview-db:
   node-ipc:
   node-config:
   kupo-db:
