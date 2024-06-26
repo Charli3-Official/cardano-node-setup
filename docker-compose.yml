@@ -1,6 +1,6 @@
 services:
   cardano-node:
-    image: inputoutput/cardano-node:1.35.7
+    image: ghcr.io/intersectmbo/cardano-node:8.9.3
     command: [
       "run",
       "--config", "/config/config.json",
@@ -22,7 +22,7 @@ services:
         max-size: "50m"
 
   ogmios:
-    image: cardanosolutions/ogmios:v5.6.0-mainnet
+    image: cardanosolutions/ogmios:v6.4.0
     volumes: 
       - node-ipc:/ipc
       - ./cardano-configurations/network/mainnet:/config
@@ -38,7 +38,7 @@ services:
     ]
 
   kupo:
-    image: cardanosolutions/kupo:v2.5.1
+    image: cardanosolutions/kupo:v2.8.0
     depends_on:
       - cardano-node
     command:
