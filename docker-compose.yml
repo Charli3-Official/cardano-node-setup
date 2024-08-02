@@ -1,6 +1,6 @@
 services:
   cardano-node:
-    image: ghcr.io/intersectmbo/cardano-node:9.0.0
+    image: ghcr.io/intersectmbo/cardano-node:9.1.0
     command: [
       "run",
       "--config", "/config/config.json",
@@ -38,7 +38,7 @@ services:
     ]
 
   kupo:
-    image: cardanosolutions/kupo:v2.8.0
+    image: cardanosolutions/kupo:v2.9.0
     depends_on:
       - cardano-node
     command:
