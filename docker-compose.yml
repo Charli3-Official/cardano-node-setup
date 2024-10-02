@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   cardano-node:
-    image: ghcr.io/intersectmbo/cardano-node:9.1.0
+    image: ghcr.io/intersectmbo/cardano-node:9.2.1
     command: [
       "run",
       "--config", "/config/config.json",
@@ -24,7 +24,7 @@ services:
         max-size: "50m"
   
   ogmios:
-    image: cardanosolutions/ogmios:v6.5.0
+    image: cardanosolutions/ogmios:v6.8.0
     volumes: 
       - node-ipc:/ipc
       - ./cardano-configurations/network/preprod:/config
